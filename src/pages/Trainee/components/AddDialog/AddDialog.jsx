@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Button, Dialog, DialogContentText, DialogContent, DialogTitle,
 } from '@material-ui/core';
-import { Email, Person, VisibilityOff } from '@material-ui/icons/index';
+import { Email, Person, VisibilityOff } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import schema from './Schema';
 import Handler from './Handler';

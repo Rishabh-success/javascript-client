@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -55,7 +56,6 @@ class Login extends React.Component {
           return err.message;
         }
       }
-      return false;
     };
 
     isTouched = (field) => {

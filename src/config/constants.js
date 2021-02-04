@@ -17,30 +17,32 @@ const selectOptions = [
     label: 'Football',
     value: 'football',
   },
+
 ];
+
 const radioOptionsCricket = [
-  {
-    label: 'Wicket Keeper',
-    value: 'wicket keeper',
-  },
   {
     label: 'Batsman',
     value: 'batsman',
+  },
+  {
+    label: 'WicketKeeper',
+    value: 'wicket-keeper',
   },
   {
     label: 'Bowler',
     value: 'bowler',
   },
   {
-    label: 'All Rounder',
-    value: 'all rounder',
+    label: 'All-Rounder',
+    value: 'all-rounder',
   },
 ];
 
 const radioOptionsFootball = [
   {
     label: 'Striker',
-    value: 'striker',
+    value: ' striker',
   },
   {
     label: 'Defender',
@@ -59,4 +61,7 @@ const schema = yup.object().shape({
     .required('Password is required')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, 'Must contain 8 characters, at least one uppercase letter, one lowercase letter and one number'),
 });
-export { selectOptions, options, schema };
+
+export {
+  radioOptionsCricket, radioOptionsFootball, selectOptions, options, schema,
+};
