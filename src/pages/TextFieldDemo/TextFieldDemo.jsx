@@ -11,9 +11,9 @@ const TextFieldDemo = () => (
       <Slider alt="No Image" duration="1000" height="300" random banner={banners} defaultbanner={DEFAULT_BANNER_IMAGE} />
     </div>
     <p><b>This is a Disabled Input</b></p>
-    <TextField disabled value="disabled input" />
+    <TextField disabled value="Disabled input" />
     <p><b> A Valid Input</b></p>
-    <TextField value="accessible" />
+    <TextField value="Accessible" />
     <p><b>An input with Errors </b></p>
     <TextField error="Could not be more than" value="101" />
   </Div>
