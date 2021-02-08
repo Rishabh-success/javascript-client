@@ -2,6 +2,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import AddDialog from './components/AddDialog/AddDialog';
+import { Navbar } from '../components';
 
 export default class Trainee extends React.Component {
   constructor(props) {
@@ -33,10 +34,10 @@ export default class Trainee extends React.Component {
       const { open } = this.state;
       return (
         <>
+          <Navbar />
+          <br />
           <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>ADD TRAINEE</Button>
-          <Button>
-            <AddDialog open={open} onSubmit={this.handleSubmit} onClose={this.handleClose} />
-          </Button>
+          <AddDialog open={open} onClose={this.handleClose} onSubmit={() => this.handleSubmit} />
         </>
       );
     }
