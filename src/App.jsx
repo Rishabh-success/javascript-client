@@ -1,8 +1,8 @@
 import React from 'react';
-import { ChildrenDemo } from './pages/ChildrenDemo';
+import { Trainee } from './pages/Trainee';
 
 function App() {
-  return (<ChildrenDemo />
+  return (<Trainee />
   );
 }
 export default App;

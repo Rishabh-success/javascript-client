@@ -1,6 +1,6 @@
 import React from 'react';
-import { ThemeProvider } from '@material-ui/core';
-import Calculation from '../../components/Math/Math';
+import { Typography } from '@material-ui/core';
+import Math from '../../components/Math/Math';
 import Theme from '../../theme';
 
 export default class CalcultorDemo extends React.Component {
@@ -13,12 +13,12 @@ export default class CalcultorDemo extends React.Component {
   render() {
     return (
       <>
-        <ThemeProvider theme={Theme}>
-          <Calculation first={7} second={4} operator="+" />
-          <Calculation first={7} second={3} operator="-" />
-          <Calculation first={7} second={20} operator="*" />
-          <Calculation first={7} second={0} operator="/" />
-          <Calculation first={7} second={4} operator="+">
+        <Typography theme={Theme}>
+          <Math first={7} second={4} operator="+" />
+          <Math first={7} second={3} operator="-" />
+          <Math first={7} second={20} operator="*" />
+          <Math first={7} second={0} operator="/" />
+          <Math first={7} second={4} operator="+">
             {
               (first, second, result) => (
                 <p>
@@ -37,8 +37,8 @@ export default class CalcultorDemo extends React.Component {
                 </p>
               )
             }
-          </Calculation>
-          <Calculation first={3} second={4} operator="+">
+          </Math>
+          <Math first={3} second={4} operator="+">
             {
               (first, second, result) => (
                 <p>
@@ -58,8 +58,8 @@ export default class CalcultorDemo extends React.Component {
                 </p>
               )
             }
-          </Calculation>
-        </ThemeProvider>
+          </Math>
+        </Typography>
       </>
     );
   }
