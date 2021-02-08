@@ -9,10 +9,10 @@ function SelectField(props) {
   return (
     <>
       <Select onChange={onChange} error={error} onBlur={onBlur}>
-        { defaultText && <option>{defaultText}</option>}
+        {defaultText && <option>{defaultText}</option>}
         {
           options && options.length
-          && options.map(({ value, label }) => <option key={label} value={value}>{label}</option>)
+            && options.map(({ value, label }) => <option key={label} value={value}>{label}</option>)
         }
       </Select>
       <Err>{error}</Err>
@@ -20,16 +20,15 @@ function SelectField(props) {
   );
 }
 export default SelectField;
-SelectField.defaultProps = {
-  error: false,
-  options: [],
-  defaultText: 'Select',
-};
-
 SelectField.propTypes = {
-  error: PropTypes.bool,
+  error: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.object),
   defaultText: PropTypes.string,
-  onBlur: PropTypes.func.isRequired,
+  onBlur: PropTypes.string.isRequired,
+};
+SelectField.defaultProps = {
+  error: '',
+  options: [],
+  defaultText: 'Select',
 };

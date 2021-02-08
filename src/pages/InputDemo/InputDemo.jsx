@@ -34,20 +34,20 @@ class InputDemo extends React.Component {
       });
     }
 
-    handleSportChange = ({ target: { value } }) => {
-      this.setState({ sport: value === 'Select' ? '' : value });
-      return value === 'cricket' ? this.setState({ football: '' }) : this.setState({ cricket: '' });
-    }
+      handleSportChange = ({ target: { value } }) => {
+        this.setState({ sport: value === 'Select' ? '' : value });
+        return value === 'cricket' ? this.setState({ football: '' }) : this.setState({ cricket: '' });
+      }
 
-    handlePositionChange = (e) => {
-      const { sport } = this.state;
-      return sport === 'cricket' ? this.setState({ cricket: e.target.value }) : this.setState({ football: e.target.value });
-    }
+      handlePositionChange = (e) => {
+        const { sport } = this.state;
+        return sport === 'cricket' ? this.setState({ cricket: e.target.value }, () => console.log(this.state)) : this.setState({ football: e.target.value }, () => console.log(this.state));
+      }
 
-    RadioOption = () => {
-      const { sport } = this.state;
-      return options[sport];
-    };
+      RadioOption = () => {
+        const { sport } = this.state;
+        return options[sport];
+      };
 
     getError = (field) => {
       const { touched } = this.state;
