@@ -1,52 +1,99 @@
 import React from 'react';
-import { TextField, SelectField, RadioField } from '../../components';
+import * as yup from 'yup';
+import {
+  TextField, SelectField, RadioField, ButtonField,
+} from '../../components';
 import { selectOptions, options } from '../../config/constants';
 
 class InputDemo extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      sport: '',
-      cricket: '',
-      football: '',
-    };
-  }
+    schema = yup.object().shape({
+      name: yup.string().required('Name is a required field').min(3),
+      sport: yup.string().required('Sport is a required field'),
+      cricket: yup.string().when('sport', { is: 'cricket', then: yup.string().required('What you do is a required field') }),
+      football: yup.string().when('sport', { is: 'football', then: yup.string().required('What you do is a required field') }),
+    });
 
-handleNameChange = (e) => {
-  this.setState({ name: e.target.value }, () => {
-    console.log(this.state);
-  });
-}
+    constructor(props) {
+      super(props);
+      this.state = {
+        name: '',
+        sport: '',
+        cricket: '',
+        football: '',
+        touched: {
+          name: false,
+          sport: false,
+          cricket: false,
+          football: false,
+        },
+      };
+    }
 
-handleSportChange = ({ target: { value } }) => {
-  this.setState({ sport: value === 'Select' ? '' : value });
-  return value === 'cricket' ? this.setState({ football: '' }) : this.setState({ cricket: '' }, () => console.log(this.state));
-}
+    handleNameChange = (e) => {
+      this.setState({ name: e.target.value }, () => {
+      });
+    }
 
-handlePositionChange = (e) => {
-  const { sport } = this.state;
-  return sport === 'cricket' ? this.setState({ cricket: e.target.value }, () => console.log(this.state)) : this.setState({ football: e.target.value }, () => console.log(this.state));
-}
+    handleSportChange = ({ target: { value } }) => {
+      this.setState({ sport: value === 'Select' ? '' : value });
+      return value === 'cricket' ? this.setState({ football: '' }) : this.setState({ cricket: '' });
+    }
+
+    handlePositionChange = (e) => {
+      const { sport } = this.state;
+      return sport === 'cricket' ? this.setState({ cricket: e.target.value }) : this.setState({ football: e.target.value });
+    }
 
     RadioOption = () => {
       const { sport } = this.state;
       return options[sport];
     };
 
+    getError = (field) => {
+      const { touched } = this.state;
+      if (touched[field] && this.hasErrors()) {
+        try {
+          this.schema.validateSyncAt(field, this.state);
+        } catch (err) {
+          return err.message;
+        }
+      }
+      return true;
+    };
+
+    hasErrors = () => {
+      try {
+        this.schema.validateSync(this.state);
+      } catch (err) {
+        return true;
+      }
+      return false;
+    }
+
+    isTouched = (field) => {
+      const { touched } = this.state;
+      this.setState({
+        touched: {
+          ...touched,
+          [field]: true,
+        },
+      });
+    }
+
     render() {
-      const { sport, name } = this.state;
+      const { sport } = this.state;
       return (
         <>
           <div>
             <p><b>Name:</b></p>
-            <TextField error="" onChange={this.handleNameChange} value={name} />
+            <TextField error={this.getError('name')} onChange={this.handleNameChange} onBlur={() => this.isTouched('name')} />
             <p><b>Select the game you play?</b></p>
             <SelectField
-              error=""
+              error={this.getError('sport')}
               onChange={this.handleSportChange}
               options={selectOptions}
               defaultText="Select"
+              onBlur={() => this.isTouched('sport')}
             />
             <div>
               {
@@ -55,13 +102,18 @@ handlePositionChange = (e) => {
                     <>
                       <p><b>What you do?</b></p>
                       <RadioField
-                        error=""
+                        error={this.getError(sport)}
                         options={this.RadioOption()}
                         onChange={this.handlePositionChange}
+                        onBlur={() => this.isTouched(sport)}
                       />
                     </>
                   )
               }
+            </div>
+            <div>
+              <ButtonField value="Cancel" />
+              <ButtonField value="Submit" disabled={this.hasErrors()} />
             </div>
           </div>
         </>
