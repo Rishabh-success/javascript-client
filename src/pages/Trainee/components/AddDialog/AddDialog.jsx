@@ -7,6 +7,7 @@ import { Email, Person, VisibilityOff } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import schema from './Schema';
 import Handler from './Handler';
+import { snackbarContext } from '../../../../contexts/index';
 
 const passwordStyle = () => ({
   passfield: {
@@ -131,7 +132,22 @@ class AddDialog extends React.Component {
               &nbsp;
               <div align="right">
                 <Button onClick={onClose} color="primary"> CANCEL</Button>
-                <Button color="primary" disabled={this.hasErrors()} onClick={() => onSubmit({ name, email, password })}>SUBMIT</Button>
+                <snackbarContext.Consumer>
+                  {(value) => (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      autoHideDuration={6000}
+                      disabled={this.hasErrors()}
+                      onClick={() => {
+                        onSubmit()({ name, email, password });
+                        value('This is a successfully added trainee message ! ', 'success');
+                      }}
+                    >
+                      SUBMIT
+                    </Button>
+                  )}
+                </snackbarContext.Consumer>
               </div>
             </DialogContent>
           </Dialog>
