@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+
 import { Button, withStyles } from '@material-ui/core';
 import { AddDialog } from './components/index';
+import { Table } from '../../components/index';
 import trainees from './data/trainee';
 
 const useStyles = (theme) => ({
@@ -19,6 +21,8 @@ class TraineeList extends React.Component {
     super(props);
     this.state = {
       open: false,
+      orderBy: '',
+      order: 'asc',
     };
   }
 
@@ -41,32 +45,66 @@ class TraineeList extends React.Component {
     });
   }
 
+  handleSelect = (event) => {
+    console.log(event);
+  };
+
+  handleSort = (field) => (event) => {
+    const { order } = this.state;
+    console.log(event);
+    this.setState({
+      orderBy: field,
+      order: order === 'asc' ? 'desc' : 'asc',
+    });
+  };
+
   render() {
-    const { open } = this.state;
-    const { match: { url }, classes } = this.props;
+    const { open, order, orderBy } = this.state;
+    const { classes } = this.props;
     return (
       <>
         <div className={classes.root}>
-          <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-            ADD TRAINEELIST
-          </Button>
-          <AddDialog open={open} onClose={this.handleClose} onSubmit={() => this.handleSubmit} />
-          <ul>
-            {trainees.map(({ name, id }) => (
-              <li key={id}>
-                <Link to={`${url}/${id}`}>
-                  {name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className={classes.dialog}>
+            <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+              ADD TRAINEELIST
+            </Button>
+            <AddDialog open={open} onClose={this.handleClose} onSubmit={() => this.handleSubmit} />
+          </div>
+          &nbsp;
+          &nbsp;
+          <Table
+            id="id"
+            data={trainees}
+            column={
+              [
+                {
+                  field: 'name',
+                  label: 'Name',
+                },
+                {
+                  field: 'email',
+                  label: 'Email Address',
+                  format: (value) => value && value.toUpperCase(),
+                },
+                {
+                  field: 'createdAt',
+                  label: 'Date',
+                  align: 'right',
+                  format: this.getDateFormat,
+                },
+              ]
+            }
+            onSort={this.handleSort}
+            orderBy={orderBy}
+            order={order}
+            onSelect={this.handleSelect}
+          />
         </div>
       </>
     );
   }
 }
 TraineeList.propTypes = {
-  match: PropTypes.objectOf(PropTypes.object).isRequired,
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 export default withStyles(useStyles)(TraineeList);
