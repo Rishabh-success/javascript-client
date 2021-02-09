@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Table as Tables, TableCell, TableContainer, TableHead, TableRow, Paper, withStyles, TableBody,
-  TableSortLabel,
+  TableSortLabel, TablePagination, IconButton,
 } from '@material-ui/core';
 
 const useStyles = (theme) => ({
@@ -25,8 +25,8 @@ const useStyles = (theme) => ({
 
 const Table = (props) => {
   const {
-    // eslint-disable-next-line react/prop-types
-    classes, data, column, order, orderBy, onSort, onSelect,
+    classes, data, column, order, orderBy, onSort, onSelect, count, page, actions,
+    rowsPerPage, onChangePage,
   } = props;
 
   return (
@@ -54,33 +54,62 @@ const Table = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((element) => (
-            <TableRow
-              key={element.id}
-              className={classes.root}
-              onMouseEnter={onSelect(element)}
-            >
-              {column.map(({ field, align, format }) => (
-                <TableCell align={align}>
-                  {format !== undefined
-                    ? format(element[field])
-                    : element[field]}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+          {(rowsPerPage > 0
+            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : data
+          )
+            // eslint-disable-next-line no-shadow
+            .map((data) => (
+              <TableRow
+                key={data.id}
+                className={classes.root}
+                onMouseEnter={onSelect(data)}
+              >
+                {column.map(({ field, align, format }) => (
+                  <TableCell align={align}>
+                    {format !== undefined
+                      ? format(data[field])
+                      : data[field]}
+                  </TableCell>
+                ))}
+                {actions.map(({ icon, handler }) => (
+                  <IconButton onClick={handler(data)} className={classes.action}>
+                    {icon}
+                  </IconButton>
+                ))}
+              </TableRow>
+            ))}
         </TableBody>
       </Tables>
+      {
+        count ? (
+          <TablePagination
+            component="div"
+            rowsPerPageOptions={0}
+            count={count}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={onChangePage}
+          />
+        ) : ''
+
+      }
     </TableContainer>
   );
 };
 Table.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  data: PropTypes.objectOf(PropTypes.object).isRequired,
   column: PropTypes.arrayOf(PropTypes.object).isRequired,
   order: PropTypes.string,
   orderBy: PropTypes.string,
   onSort: PropTypes.func,
+  actions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  count: PropTypes.number.isRequired,
+  onChangePage: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  onSelect: PropTypes.func.isRequired,
 };
 Table.defaultProps = {
   order: 'asc',
