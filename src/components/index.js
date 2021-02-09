@@ -4,4 +4,4 @@ export { RadioField } from './RadioField';
 export { Slider } from './Slider';
 export { ButtonField } from './Button';
 export { Math } from './Math';
-export { TableComponent } from './Table';
+export { Table } from './Table/index';
