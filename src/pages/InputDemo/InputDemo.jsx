@@ -41,7 +41,7 @@ class InputDemo extends React.Component {
 
     handlePositionChange = (e) => {
       const { sport } = this.state;
-      return sport === 'cricket' ? this.setState({ cricket: e.target.value }, () => console.log(this.state)) : this.setState({ football: e.target.value }, () => console.log(this.state));
+      return sport === 'cricket' ? this.setState({ cricket: e.target.value }) : this.setState({ football: e.target.value });
     }
 
     RadioOption = () => {
@@ -85,7 +85,7 @@ class InputDemo extends React.Component {
       return (
         <>
           <div>
-            <p><b>Name:</b></p>
+            <p><b>Name: </b></p>
             <TextField error={this.getError('name')} onChange={this.handleNameChange} onBlur={() => this.isTouched('name')} />
             <p><b>Select the game you play?</b></p>
             <SelectField
