@@ -1,19 +1,20 @@
-/* eslint-disable no-console */
-/* eslint-disable consistent-return */
 import axios from 'axios';
 
-export default async function callApi(method, url, data) {
-  const mainUrl = `http://localhost:9000/api${url}`;
+export default async function callApi(route, method, body) {
+    console.log('method', method)
+    console.log('url is', route)
+    console.log('data is', body)
+  const mainUrl = 'http://localhost:9000/api' + route;
+  const headers= {
+      'Content-Type': 'application/json',
+      authorization: localStorage.getItem('token')
+  }
   console.log('main url is', mainUrl);
-  try {
-    const response = await axios({
+    const resp = await axios({
       method,
       url: mainUrl,
-      data,
-      headers: { Authorization: window.localStorage.getItem('token') },
+      data: body,
+      headers,
     });
-    return response;
-  } catch (err) {
-    console.log('error', err);
+    return resp;
   }
-}

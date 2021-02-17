@@ -6,7 +6,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { AddDialog, EditDialog, DeleteDialog } from './components';
 import { Table } from '../../components';
-import { trainees } from './data/trainee';
+import callApi from '../../libs/utils/api';
+import { IsLoadingHOC } from '../../components/HOC';
 
 const useStyles = (theme) => ({
   root: {
@@ -17,20 +18,33 @@ const useStyles = (theme) => ({
   },
 });
 
+const asend = 'asc';
+const dsend = 'desc';
 class TraineeList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      orderBy: '',
-      order: 'asc',
+      orderBy: 'createdBy',
+      order: asend,
+      // eslint-disable-next-line react/no-unused-state
+      sortedOrder: -1,
       EditOpen: false,
       RemoveOpen: false,
+      skip: 0,
+      limit: 20,
       editData: {},
       deleteData: {},
       page: 0,
       rowsPerPage: 10,
+      database: [],
     };
+  }
+
+  componentDidMount() {
+    const { setLoading } = this.props;
+    setLoading(true);
+    this.renderData();
   }
 
   handleClickOpen = () => {
@@ -46,7 +60,6 @@ class TraineeList extends React.Component {
   handleSubmit = () => {
     this.setState({
       open: false,
-    }, () => {
     });
   }
 
@@ -55,16 +68,24 @@ class TraineeList extends React.Component {
   }
 
  handleSort = (field) => () => {
-   const { order } = this.state;
+   const { order, orderBy } = this.state;
+   let tabOrder = asend;
+   let sequence = -1;
+   if (orderBy === field && order === asend) {
+     tabOrder = dsend;
+     sequence = 1;
+   }
    this.setState({
      orderBy: field,
-     order: order === 'asc' ? 'desc' : 'asc',
+     order: tabOrder,
+     // eslint-disable-next-line react/no-unused-state
+     sortedOrder: sequence,
    });
  };
 
   handleChangePage = (event, newPage) => {
-    this.setState({
-      page: newPage,
+    this.setState({ page: newPage, skip: newPage * 20 }, () => {
+      this.renderData();
     });
   };
 
@@ -132,9 +153,30 @@ class TraineeList extends React.Component {
     });
   };
 
+  renderData = async () => {
+    const {
+      limit, skip,
+    } = this.state;
+    const { setLoading } = this.props;
+    await callApi(`/trainee/?limit=${limit}&skip=${skip}
+    `,
+    'GET')
+      .then((resp) => {
+        setTimeout(() => {
+          setLoading(false);
+          this.setState({ database: resp.data.data });
+        }, 200);
+        console.log(resp);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log('there is an errror: ', err);
+      });
+  }
+
   render() {
     const {
-      open, order, orderBy, page, rowsPerPage, EditOpen, RemoveOpen, editData,
+      open, order, orderBy, page, rowsPerPage, EditOpen, RemoveOpen, editData, database,
     } = this.state;
     const { classes } = this.props;
     return (
@@ -144,7 +186,7 @@ class TraineeList extends React.Component {
             <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
               ADD TRAINEELIST
             </Button>
-            <AddDialog open={open} onClose={this.handleClose} onSubmit={() => this.handleSubmit} />
+            <AddDialog open={open} onClose={this.handleClose} handleSubmit={this.handleSubmit} />
           </div>
           &nbsp;
           &nbsp;
@@ -162,7 +204,7 @@ class TraineeList extends React.Component {
           />
           <Table
             id="id"
-            data={trainees}
+            data={database}
             column={
               [
                 {
@@ -197,7 +239,7 @@ class TraineeList extends React.Component {
             orderBy={orderBy}
             order={order}
             onSelect={this.handleSelcet}
-            count={trainees.length}
+            count={database.length}
             page={page}
             onChangePage={this.handleChangePage}
             rowsPerPage={rowsPerPage}
@@ -209,5 +251,6 @@ class TraineeList extends React.Component {
 }
 TraineeList.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  setLoading: PropTypes.func.isRequired,
 };
-export default withStyles(useStyles)(TraineeList);
+export default withStyles(useStyles)(IsLoadingHOC(TraineeList));

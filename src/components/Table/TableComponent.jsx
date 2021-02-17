@@ -4,6 +4,7 @@ import {
   Table as Tables, TableCell, TableContainer, TableHead, TableRow, Paper, withStyles, TableBody,
   TableSortLabel, TablePagination, IconButton,
 } from '@material-ui/core';
+import { hoc } from '../HOC/index';
 
 const useStyles = (theme) => ({
   table: {
@@ -25,6 +26,7 @@ const useStyles = (theme) => ({
 
 const Table = (props) => {
   const {
+    // eslint-disable-next-line react/prop-types
     classes, data, column, order, orderBy, onSort, onSelect, count, page, actions,
     rowsPerPage, onChangePage,
   } = props;
@@ -54,46 +56,46 @@ const Table = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(rowsPerPage > 0
+        {(rowsPerPage > 0
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           )
-            // eslint-disable-next-line no-shadow
-            .map((data) => (
-              <TableRow
-                key={data.id}
-                className={classes.root}
-                onMouseEnter={onSelect(data)}
-              >
-                {column.map(({ field, align, format }) => (
-                  <TableCell align={align}>
-                    {format !== undefined
-                      ? format(data[field])
-                      : data[field]}
-                  </TableCell>
-                ))}
-                {actions.map(({ icon, handler }) => (
-                  <IconButton onClick={handler(data)} className={classes.action}>
-                    {icon}
-                  </IconButton>
-                ))}
-              </TableRow>
-            ))}
+          .map((data) => (
+            <TableRow
+              key={data.id}
+              className={classes.root}
+              onMouseEnter={onSelect(data)}
+            >
+              {column.map(({ field, align, format }) => (
+                <TableCell onClick={(event) => onSelect(event, element.name)} align={align} component="th" scope="row" order={order} orderBy={orderBy}>
+                  {format !== undefined
+                    ? format(data[field])
+                    : data[field]}
+                </TableCell>
+              ))}
+              {actions.map(({ icon, handler }) => (
+                <IconButton onClick={handler(data)} className={classes.action}>
+                  {icon}
+                </IconButton>
+              ))}
+            </TableRow>
+          ))}
         </TableBody>
       </Tables>
       {
         count ? (
           <TablePagination
-            component="div"
-            rowsPerPageOptions={0}
-            count={count}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={onChangePage}
-          />
+        component="div"
+        rowsPerPageOptions={0}
+        count={count}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={onChangePage}
+        // onChangeRowsPerPage={onChangeRowsPerPage}
+      />
         ) : ''
 
-      }
+}
     </TableContainer>
   );
 };
@@ -110,6 +112,7 @@ Table.propTypes = {
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   onSelect: PropTypes.func.isRequired,
+  // onChangeRowsPerPage: PropTypes.func.isRequired,
 };
 Table.defaultProps = {
   order: 'asc',

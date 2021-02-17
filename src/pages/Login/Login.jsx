@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -7,7 +6,7 @@ import {
 } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { Email, VisibilityOff, LockOutlined } from '@material-ui/icons';
-import { schema } from '../../config/constants';
+import { schema } from '../../configs/constants';
 import callApi from '../../libs/utils/api';
 import { snackbarContext } from '../../contexts/index';
 
@@ -28,7 +27,7 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loader: false,
+      loading: false,
       disabled: true,
       redirect: false,
       email: '',
@@ -45,6 +44,7 @@ class Login extends React.Component {
     if (redirect) {
       return <Redirect to="/trainee" />;
     }
+    return '';
   };
 
   handleChange = (key) => ({ target: { value } }) => {
@@ -70,6 +70,7 @@ class Login extends React.Component {
           return err.message;
         }
       }
+      return '';
     };
 
     isTouched = (field) => {
@@ -86,12 +87,12 @@ class Login extends React.Component {
       const { email, password } = this.state;
       await this.setState({
         disabled: true,
-        loader: true,
+        loading: true,
       });
-
       await callApi('POST', '/user/login', { email, password })
-        .then((resp) => {
-          localStorage.setItem('token', resp.data.data);
+        .then((response) => {
+          localStorage.setItem('token', response.data.token);
+          console.log('response.data.data', response.data.token);
           this.setState({
             redirect: true,
             message: 'Successfully Login',
@@ -112,7 +113,7 @@ class Login extends React.Component {
 
     render() {
       const { classes } = this.props;
-      const { loader } = this.state;
+      const { loading } = this.state;
 
       return (
         <>
@@ -174,7 +175,7 @@ class Login extends React.Component {
                       {(value) => (
                         <Button variant="contained" color="primary" onClick={() => this.onClickHandler(value)} disabled={this.hasErrors()} fullWidth>
                           {this.renderRedirect()}
-                          <span>{loader ? <CircularProgress size={20} /> : ''}</span>
+                          <span>{loading ? <CircularProgress size={20} /> : ''}</span>
                           SIGN IN
                         </Button>
                       )}
