@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -56,46 +57,45 @@ const Table = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-        {(rowsPerPage > 0
+          {(rowsPerPage > 0
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           )
-          .map((data) => (
-            <TableRow
-              key={data.id}
-              className={classes.root}
-              onMouseEnter={onSelect(data)}
-            >
-              {column.map(({ field, align, format }) => (
-                <TableCell onClick={(event) => onSelect(event, element.name)} align={align} component="th" scope="row" order={order} orderBy={orderBy}>
-                  {format !== undefined
-                    ? format(data[field])
-                    : data[field]}
-                </TableCell>
-              ))}
-              {actions.map(({ icon, handler }) => (
-                <IconButton onClick={handler(data)} className={classes.action}>
-                  {icon}
-                </IconButton>
-              ))}
-            </TableRow>
-          ))}
+            .map((data) => (
+              <TableRow
+                key={data.id}
+                className={classes.root}
+                onMouseEnter={onSelect(data)}
+              >
+                {column.map(({ field, align, format }) => (
+                  <TableCell onClick={(event) => onSelect(event, element.name)} align={align} component="th" scope="row" order={order} orderBy={orderBy}>
+                    {format !== undefined
+                      ? format(data[field])
+                      : data[field]}
+                  </TableCell>
+                ))}
+                {actions.map(({ icon, handler }) => (
+                  <IconButton onClick={handler(data)} className={classes.action}>
+                    {icon}
+                  </IconButton>
+                ))}
+              </TableRow>
+            ))}
         </TableBody>
       </Tables>
       {
         count ? (
           <TablePagination
-        component="div"
-        rowsPerPageOptions={0}
-        count={count}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={onChangePage}
-        // onChangeRowsPerPage={onChangeRowsPerPage}
-      />
+            component="div"
+            rowsPerPageOptions={0}
+            count={count}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={onChangePage}
+          />
         ) : ''
 
-}
+      }
     </TableContainer>
   );
 };

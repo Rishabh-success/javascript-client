@@ -1,5 +1,5 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable*/
+
 import React from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';

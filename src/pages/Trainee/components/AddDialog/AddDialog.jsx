@@ -52,7 +52,6 @@ class AddDialog extends React.Component {
   };
 
   onClickHandler = async (data, openSnackBar) => {
-    // e.preventdefault();
     this.setState({
       isLoading: true,
       hasError: true,
@@ -122,9 +121,7 @@ class AddDialog extends React.Component {
     const {
       open, onClose, classes,
     } = this.props;
-    // eslint-disable-next-line no-shadow
     const {
-    // eslint-disable-next-line no-shadow
       name, email, password, isLoading,
     } = this.state;
     const ans = [];
@@ -187,6 +184,7 @@ class AddDialog extends React.Component {
     );
   }
 }
+
 export default withStyles(passwordStyle)(AddDialog);
 AddDialog.propTypes = {
   open: PropTypes.bool.isRequired,

@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
@@ -27,7 +29,6 @@ class TraineeList extends React.Component {
       open: false,
       orderBy: 'createdBy',
       order: asend,
-      // eslint-disable-next-line react/no-unused-state
       sortedOrder: -1,
       EditOpen: false,
       RemoveOpen: false,
@@ -57,10 +58,13 @@ class TraineeList extends React.Component {
     return open;
   };
 
-  handleSubmit = () => {
+  handleSubmit = (data, value) => {
     this.setState({
       open: false,
     });
+    const message = 'This is success Message';
+    const status = 'success';
+    value(message, status);
   }
 
   handleSelcet = () => {
@@ -78,18 +82,17 @@ class TraineeList extends React.Component {
    this.setState({
      orderBy: field,
      order: tabOrder,
-     // eslint-disable-next-line react/no-unused-state
      sortedOrder: sequence,
    });
  };
 
   handleChangePage = (event, newPage) => {
+    this.componentDidMount(newPage);
     this.setState({ page: newPage, skip: newPage * 20 }, () => {
       this.renderData();
     });
   };
 
-  // eslint-disable-next-line no-unused-vars
   handleRemoveDialogOpen = (element) => () => {
     this.setState({
       RemoveOpen: true,
@@ -108,7 +111,6 @@ class TraineeList extends React.Component {
     this.setState({
       RemoveOpen: false,
     });
-    // eslint-disable-next-line no-console
     console.log('Deleted Item ', deleteData);
     const { createdAt } = deleteData;
     const isAfter = moment(createdAt).isSameOrAfter('2019-02-14T18:15:11.778Z');
@@ -119,7 +121,6 @@ class TraineeList extends React.Component {
     value(message, status);
   };
 
-  // eslint-disable-next-line no-unused-vars
   handleEditDialogOpen = (element) => (event) => {
     this.setState({
       EditOpen: true,
@@ -137,7 +138,6 @@ class TraineeList extends React.Component {
     this.setState({
       EditOpen: false,
     });
-    // eslint-disable-next-line no-console
     console.log('Edited Item ', { name, email });
     const message = 'This is a success message';
     const status = 'success';
@@ -149,7 +149,6 @@ class TraineeList extends React.Component {
       return;
     }
     this.setState({
-      // snackbarOpen: false,
     });
   };
 
@@ -176,9 +175,9 @@ class TraineeList extends React.Component {
 
   render() {
     const {
-      open, order, orderBy, page, rowsPerPage, EditOpen, RemoveOpen, editData, database,
+      open, order, orderBy, page, rowsPerPage, EditOpen, RemoveOpen, editData, deleteData, database,
     } = this.state;
-    const { classes } = this.props;
+    const { classes, setLoading } = this.props;
     return (
       <>
         <div className={classes.root}>
@@ -201,8 +200,10 @@ class TraineeList extends React.Component {
             openRemove={RemoveOpen}
             onClose={this.handleRemoveClose}
             remove={this.handleRemove}
+            data={deleteData}
           />
           <Table
+            loading={setLoading}
             id="id"
             data={database}
             column={

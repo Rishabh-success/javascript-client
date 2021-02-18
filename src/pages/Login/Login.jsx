@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, Typography, CardContent, InputAdornment, Button, Avatar, Card, CssBaseline, withStyles,
-  CircularProgress,
+  TextField, Typography, CardContent, InputAdornment, Button, Avatar, Card,
+  CssBaseline, withStyles, CircularProgress,
 } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { Email, VisibilityOff, LockOutlined } from '@material-ui/icons';
-import { schema } from '../../configs/constants';
+import { schema } from '../../config/constants';
 import callApi from '../../libs/utils/api';
 import { snackbarContext } from '../../contexts/index';
 
@@ -39,17 +39,17 @@ class Login extends React.Component {
     };
   }
 
-  renderRedirect = () => {
-    const { redirect } = this.state;
-    if (redirect) {
-      return <Redirect to="/trainee" />;
-    }
-    return '';
-  };
+    renderRedirect = () => {
+      const { redirect } = this.state;
+      if (redirect) {
+        return <Redirect to="/trainee" />;
+      }
+      return '';
+    };
 
-  handleChange = (key) => ({ target: { value } }) => {
-    this.setState({ [key]: value });
-  };
+    handleChange = (key) => ({ target: { value } }) => {
+      this.setState({ [key]: value });
+    };
 
     hasErrors = () => {
       try {
@@ -92,6 +92,7 @@ class Login extends React.Component {
       await callApi('POST', '/user/login', { email, password })
         .then((response) => {
           localStorage.setItem('token', response.data.token);
+          // eslint-disable-next-line no-console
           console.log('response.data.data', response.data.token);
           this.setState({
             redirect: true,
